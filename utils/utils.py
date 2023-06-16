@@ -8,7 +8,7 @@ import json as json
 from dotenv import load_dotenv 
 
 # Data Path
-DATA_PATH = r'C:\Users\liamp\OneDrive\Desktop\Liams_path_to_Data_science\Football_api_project'
+DATA_PATH = r'C:/Users/liamp/OneDrive/Desktop/Liams_path_to_Data_science/Football_api_project/Output_files'
 
 # Endpoints
 API_FOOTBALL_PLAYERS_ENDPOINT = "https://api-football-v1.p.rapidapi.com/v3/players"
@@ -59,19 +59,22 @@ def get_api_key():
     return api_key
 
 
-def save_df_to_csv(df):
+def save_df_to_csv(df, data_path, championship):
     """
     Function to save a DataFrame to a CSV file in the specified data path.
 
     Args:
         df (DataFrame): The DataFrame to save.
+        data_path (str): The path where the CSV file will be saved.
+        championship (str): The name of the championship.
     """
-    
-    datetime_now = datetime.datetime.now().strftime("%Y-%m-%d%H:%M:%S")
-    if not os.path.exists(DATA_PATH):
-        os.makedirs(DATA_PATH)
-    df.to_csv(DATA_PATH+'/df_championship_' + CHAMPIONSHIP + '_' + datetime_now + '.csv', index=False, header=True)
-
+    try:
+        datetime_now = datetime.datetime.now().strftime("%Y-%m-%d%H_%M_%S")
+        file_path = os.path.join(data_path, f'df_championship_{championship}_{datetime_now}.csv')
+        df.to_csv(file_path, index=False, header=True)
+        return True, file_path
+    except Exception as e:
+        return False, str(e)
 
 def get_total_pages():
     """
@@ -188,7 +191,7 @@ def get_championship_data(url, key, initial=FIRST):
     api_data = get_data(parsed)
 
     df = pd.concat([api_data], ignore_index=True)
-    
+    print(df)
     return df
 
 
@@ -202,7 +205,7 @@ def clean_weight_height(df):
     Returns:
         DataFrame: The cleaned DataFrame.
     """
-    df['Weight_kg'] = (df['Weight'].str.extract('^([0-9]{2,3})')).astype(float)
+    # df['Weight_kg'] = (df['Weight'].str.extract('^([0-9]{2,3})')).astype(float) #//! this currenty does not seem to work
     df['Height_cm'] = (df['Height'].str.extract('^([0-9]{3})')).astype(float)
 
     df.drop(['Weight', 'Height'], axis=1, inplace=True)
