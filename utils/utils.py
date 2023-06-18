@@ -69,7 +69,7 @@ def save_df_to_csv(df, data_path, championship):
         championship (str): The name of the championship.
     """
     try:
-        datetime_now = datetime.datetime.now().strftime("%Y-%m-%d%H_%M_%S")
+        datetime_now = datetime.datetime.now().strftime("%Y-%m-%d-%H_%M_%S")
         file_path = os.path.join(data_path, f'df_championship_{championship}_{datetime_now}.csv')
         df.to_csv(file_path, index=False, header=True)
         return True, file_path
