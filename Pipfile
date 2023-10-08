@@ -9,6 +9,7 @@ requests = "*"
 datetime = "*"
 python-dotenv = "*"
 python-time = "*"
+fuzzywuzzy = "*"
 
 [dev-packages]
 
